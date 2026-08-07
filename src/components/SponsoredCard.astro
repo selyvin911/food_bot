@@ -1,5 +1,6 @@
 ---
 import { AD_LOGO_URL } from '../data/config';
+import { asset } from '../lib/url';
 import { UI } from '../data/strings';
 
 interface Props {
@@ -16,7 +17,7 @@ const { advertiser, href } = Astro.props;
     <div class="ad__thumb" aria-hidden="true">
       {
         AD_LOGO_URL ? (
-          <img class="ad__logo" src={AD_LOGO_URL} alt="" width="64" height="64" decoding="async" />
+          <img class="ad__logo" src={asset(AD_LOGO_URL)} alt="" width="64" height="64" decoding="async" />
         ) : (
           advertiser.charAt(0)
         )

@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { asset } from '../lib/url';
+import Analytics from '../components/Analytics.astro';
 
 interface Props {
   title: string;
@@ -18,7 +20,7 @@ const { title, description } = Astro.props;
     <meta name="theme-color" content="#F7F9F7" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,5 +30,6 @@ const { title, description } = Astro.props;
   </head>
   <body>
     <slot />
+    <Analytics />
   </body>
 </html>

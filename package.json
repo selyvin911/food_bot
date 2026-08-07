@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "deploy": "npm run build && gh-pages -d dist --dotfiles"
+    "deploy": "npm run build && gh-pages -d dist --dotfiles",
+    "deploy:ghio": "BASE_PATH=/food_bot astro build && rm -f dist/CNAME && gh-pages -d dist --dotfiles"
   },
   "dependencies": {
     "astro": "^5.13.0"

@@ -1,5 +1,6 @@
 ---
 import { AVATAR_URL, FOLLOW_URL } from '../data/config';
+import { asset } from '../lib/url';
 import { UI } from '../data/strings';
 
 interface Props {
@@ -18,7 +19,7 @@ const { initials, name, status } = Astro.props;
       AVATAR_URL ? (
         <img
           class="profile__photo"
-          src={AVATAR_URL}
+          src={asset(AVATAR_URL)}
           alt=""
           width="58"
           height="58"
