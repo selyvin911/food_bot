@@ -1,0 +1,31 @@
+---
+import { AD_LOGO_URL } from '../data/config';
+import { UI } from '../data/strings';
+
+interface Props {
+  /** Первая буква — заглушка, если логотипа нет. */
+  advertiser: string;
+  href: string;
+}
+
+const { advertiser, href } = Astro.props;
+---
+
+<aside class="ad">
+  <a class="ad__inner" href={href} target="_blank" rel="sponsored nofollow noopener">
+    <div class="ad__thumb" aria-hidden="true">
+      {
+        AD_LOGO_URL ? (
+          <img class="ad__logo" src={AD_LOGO_URL} alt="" width="64" height="64" decoding="async" />
+        ) : (
+          advertiser.charAt(0)
+        )
+      }
+    </div>
+    <div class="ad__body">
+      <p class="ad__title">{UI.ad.title}</p>
+      <p class="ad__meta">{UI.ad.meta}</p>
+    </div>
+    <div class="ad__go" aria-hidden="true">→</div>
+  </a>
+</aside>

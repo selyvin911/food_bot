@@ -1,0 +1,82 @@
+---
+import AppBar from '../components/AppBar.astro';
+import DayPanel from '../components/DayPanel.astro';
+import DiaryFooter from '../components/DiaryFooter.astro';
+import ProfileRow from '../components/ProfileRow.astro';
+import SponsoredCard from '../components/SponsoredCard.astro';
+import WeekStrip from '../components/WeekStrip.astro';
+import Base from '../layouts/Base.astro';
+import { AD_URL, SHOW_AD } from '../data/config';
+import { UI } from '../data/strings';
+import { buildStamp } from '../lib/dates';
+import { loadDiaryWeek } from '../lib/map-board';
+
+// Runs once, during the build. The request never happens in the browser.
+const { days, weeks, range, selectedIndex, profile } = await loadDiaryWeek();
+
+const generatedAt = buildStamp(new Date());
+---
+
+<Base
+  title={UI.pageTitle(profile.name)}
+  description={UI.pageDescription(profile.name, range)}
+>
+  <div class="shell">
+    <main class="frame">
+      <AppBar />
+
+      {SHOW_AD && <SponsoredCard advertiser="VERDA" href={AD_URL} />}
+
+      <ProfileRow {...profile} />
+
+      <WeekStrip weeks={weeks} selected={selectedIndex} />
+
+      {days.map((day) => <DayPanel day={day} index={day.index} active={day.index === selectedIndex} />)}
+
+      <DiaryFooter generatedAt={generatedAt} />
+    </main>
+  </div>
+</Base>
+
+<script>
+  // Only interactive bit that needs JS: swapping which pre-rendered day panel
+  // is visible. Meal accordions are <details>, so they work without this.
+  const strip = document.querySelector<HTMLElement>('[data-week]');
+  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-day]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-day-panel]'));
+
+  function select(index: number, focus = false) {
+    tabs.forEach((tab, i) => {
+      const on = i === index;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      if (on && focus) tab.focus();
+    });
+
+    panels.forEach((panel, i) => {
+      const on = i === index;
+      panel.hidden = !on;
+      // Re-trigger the fade by removing and re-adding the attribute.
+      panel.removeAttribute('data-active');
+      if (on) panel.setAttribute('data-active', '');
+    });
+  }
+
+  strip?.addEventListener('click', (event) => {
+    const tab = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-day]');
+    if (tab) select(tabs.indexOf(tab));
+  });
+
+  strip?.addEventListener('keydown', (event) => {
+    const current = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+    const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+    if (step === 0) {
+      if (event.key === 'Home') select(0, true);
+      else if (event.key === 'End') select(tabs.length - 1, true);
+      else return;
+    } else {
+      select((current + step + tabs.length) % tabs.length, true);
+    }
+    event.preventDefault();
+  });
+</script>

@@ -1,0 +1,908 @@
+/* ============================================================
+   DayPlate — tokens + base
+   Mobile-first: every rule below is written for a phone. The only
+   media query in the project widens the frame past 430px.
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --bg: #e4e9e5;
+  --app: #f7f9f7;
+  --card: #ffffff;
+
+  /* Ink */
+  --ink: #10231f;
+  --ink-2: #3c544e;
+  --ink-3: #5c736d;
+  --muted: #7c918b;
+  --muted-2: #8a9e98;
+  --muted-3: #9fb3ad;
+  --faint: #a9b8b3;
+
+  /* Lines */
+  --line: #edf2ef;
+  --line-2: #f1f5f3;
+  --line-3: #f2f5f3;
+  --hairline: rgba(16, 35, 31, 0.07);
+
+  /* Brand */
+  --brand: #12876b;
+  --brand-ink: #0c6250;
+  --brand-soft: #dcefe7;
+  --brand-glow: rgba(18, 135, 107, 0.28);
+
+  /* Sponsored slot (dark) — совпадает с фоном логотипа Физикл */
+  --night: #010729;
+  --night-2: #1c3630;
+  --night-ink: #7fb8a6;
+  --night-sub: #a9c7be;
+
+  /* Data colours */
+  --carb: #f0a63c;
+  --protein: #12876b;
+  --fat: #4a8fd6;
+  --steps: #4a8fd6;
+  --plants: #4faa62;
+
+  /* Metrics */
+  --gutter: 16px;
+  --frame-max: 430px;
+  --r-card: 22px;
+  --r-chip: 14px;
+  --r-pill: 99px;
+  --shadow-card: 0 1px 2px rgba(16, 35, 31, 0.05), 0 8px 24px rgba(16, 35, 31, 0.05);
+  --shadow-card-soft: 0 1px 2px rgba(16, 35, 31, 0.05), 0 8px 24px rgba(16, 35, 31, 0.04);
+  --shadow-flat: 0 1px 2px rgba(16, 35, 31, 0.05);
+  --shadow-chip: 0 1px 2px rgba(16, 35, 31, 0.06);
+
+  --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+li,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--brand-ink);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+svg {
+  display: block;
+}
+
+:where(a, button, summary):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------
+   Shell / phone frame
+   ------------------------------------------------------------ */
+
+.shell {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+
+.frame {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--app);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 431px) {
+  .frame {
+    max-width: var(--frame-max);
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+}
+
+/* Shared horizontal rhythm: every block sits in the same gutter. */
+.block {
+  padding: 16px var(--gutter) 0;
+}
+
+/* ------------------------------------------------------------
+   App bar
+   ------------------------------------------------------------ */
+
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 18px 12px;
+  background: rgba(247, 249, 247, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.appbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.appbar__mark {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 9px;
+  background: var(--brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.appbar__name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.appbar__badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--brand);
+  background: var(--brand-soft);
+  padding: 5px 9px;
+  border-radius: var(--r-pill);
+}
+
+/* ------------------------------------------------------------
+   Sponsored slot
+   ------------------------------------------------------------ */
+
+.ad {
+  padding: 14px var(--gutter) 0;
+}
+
+.ad__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--night);
+  position: relative;
+  overflow: hidden;
+}
+
+.ad__inner:hover {
+  color: inherit;
+}
+
+.ad__thumb {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border-radius: 13px;
+  background: var(--night-2);
+  color: var(--night-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  overflow: hidden;
+}
+
+/*
+  Логотип — тёмная фигура на прозрачном фоне, поэтому плашка под ним белая:
+  на фоне баннера он был бы не виден.
+*/
+.ad__thumb:has(.ad__logo) {
+  background: #fff;
+}
+
+.ad__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  display: block;
+}
+
+.ad__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ad__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.ad__meta {
+  font-size: 11.5px;
+  color: var(--night-sub);
+  margin-top: 3px;
+}
+
+.ad__go {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------
+   Profile
+   ------------------------------------------------------------ */
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 18px var(--gutter) 6px;
+}
+
+.profile__avatar {
+  width: 58px;
+  height: 58px;
+  flex: 0 0 58px;
+  border-radius: var(--r-pill);
+  background: var(--brand-soft);
+  box-shadow: 0 0 0 2px var(--brand);
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  overflow: hidden;
+}
+
+/* Square source, круглая рамка — кроп по центру. */
+.profile__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile__name {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.profile__meta {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+.profile__follow {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--brand);
+  padding: 9px 14px;
+  border-radius: var(--r-pill);
+}
+
+/* Keeps the label white — the global link hover would tint it. */
+.profile__follow:hover {
+  color: #fff;
+  background: var(--brand-ink);
+}
+
+/* ------------------------------------------------------------
+   Week strip
+   ------------------------------------------------------------ */
+
+/* Недели — страницы карусели: свайп на телефоне, стрелки на десктопе. */
+.weeks {
+  position: relative;
+}
+
+.weeks__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.weeks__track::-webkit-scrollbar {
+  display: none;
+}
+
+.week {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.week__nav {
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-pill);
+  background: var(--card);
+  color: var(--ink-3);
+  box-shadow: var(--shadow-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  transition: opacity 140ms ease;
+}
+
+/* На крайней странице соответствующая стрелка гаснет. */
+.weeks--at-start [data-week-nav='-1'],
+.weeks--at-end [data-week-nav='1'] {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Стрелка — диапазон — стрелка. */
+.week__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px var(--gutter) 2px;
+}
+
+.week__range {
+  flex: 1;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.1px;
+  color: var(--ink);
+}
+
+.week__strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 10px var(--gutter) 4px;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0 7px;
+  border-radius: var(--r-chip);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-chip);
+  transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+.chip--future {
+  color: var(--faint);
+}
+
+/* Сегодняшний день обведён, даже когда открыт другой день. */
+.chip--today {
+  box-shadow: inset 0 0 0 1.5px var(--brand);
+}
+
+.chip[aria-selected='true'] {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 4px 12px var(--brand-glow);
+}
+
+.chip__dow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  opacity: 0.72;
+}
+
+.chip__num {
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.chip__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: var(--r-pill);
+  margin-top: 4px;
+  background: var(--brand);
+}
+
+/* The dot marks a day that actually has entries. */
+.chip--future .chip__dot,
+.chip--empty .chip__dot {
+  background: transparent;
+}
+
+.chip[aria-selected='true'] .chip__dot {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ------------------------------------------------------------
+   Cards
+   ------------------------------------------------------------ */
+
+.card {
+  background: var(--card);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+}
+
+.card--pad {
+  padding: 18px;
+}
+
+.card--flat {
+  box-shadow: var(--shadow-flat);
+}
+
+.card--clip {
+  overflow: hidden;
+  box-shadow: var(--shadow-card-soft);
+}
+
+/* Day panels animate in on switch, matching the design's dpFade. */
+.day-panel[data-active] {
+  animation: dpFade 220ms ease both;
+}
+
+@keyframes dpFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   Summary card
+   ------------------------------------------------------------ */
+
+.summary__label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--muted);
+}
+
+.summary__note {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-top: 4px;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.macro__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.macro__label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--ink-2);
+}
+
+.macro__pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted-2);
+}
+
+.macro__track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  overflow: hidden;
+}
+
+.macro__fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+}
+
+.macro__grams {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+
+.summary__rule {
+  height: 1px;
+  background: var(--line);
+  margin: 16px 0 14px;
+  border: 0;
+}
+
+/* Three rings share the card width, so the dial scales with its column. */
+.rings {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.ring__dial {
+  position: relative;
+  width: 100%;
+  max-width: 104px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.ring__svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring__value {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.ring__goal {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.ring__caption {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ------------------------------------------------------------
+   Empty day
+   ------------------------------------------------------------ */
+
+.empty {
+  padding: 30px 22px;
+  text-align: center;
+}
+
+.empty__glyph {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+  border-radius: var(--r-pill);
+  background: var(--line);
+  color: var(--muted-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.empty__title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: 14px;
+}
+
+.empty__text {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   Meal card — <details> drives the accordion, no JS involved
+   ------------------------------------------------------------ */
+
+.meal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 15px 18px 12px;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid transparent;
+  list-style: none;
+}
+
+.meal__head::-webkit-details-marker {
+  display: none;
+}
+
+.meal[open] .meal__head {
+  border-bottom-color: var(--line-2);
+}
+
+.meal__id {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Stretches over the name + subline + macro line, whatever their height. */
+.meal__tag {
+  width: 8px;
+  flex: 0 0 8px;
+  align-self: stretch;
+  min-height: 30px;
+  border-radius: var(--r-pill);
+}
+
+.meal__name {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.1px;
+}
+
+.meal__sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted-2);
+  margin-top: 2px;
+}
+
+.meal__sub--open {
+  display: none;
+}
+
+.meal[open] .meal__sub--open {
+  display: block;
+}
+
+.meal[open] .meal__sub--shut {
+  display: none;
+}
+
+.meal__macros {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  margin-top: 3px;
+  letter-spacing: 0.1px;
+}
+
+.meal__totals {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.meal__kcal {
+  text-align: right;
+}
+
+.meal__kcal-num {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.meal__kcal-unit {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted-2);
+}
+
+.meal__chev {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: var(--r-pill);
+  background: var(--line-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-90deg);
+  transition: transform 180ms ease;
+}
+
+.meal[open] .meal__chev {
+  transform: rotate(0deg);
+}
+
+.meal__items {
+  padding: 6px 18px 12px;
+}
+
+.meal__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--app);
+}
+
+.meal__item-name {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.meal__item-serving {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted-2);
+  margin-top: 2px;
+}
+
+.meal__item-kcal {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  flex: 0 0 auto;
+}
+
+/* ------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------ */
+
+.diary-foot {
+  padding: 22px 24px 34px;
+  text-align: center;
+}
+
+.diary-foot__note {
+  font-size: 11.5px;
+  color: var(--muted-2);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.diary-foot__cta {
+  font-size: 11.5px;
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------
+   Motion
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

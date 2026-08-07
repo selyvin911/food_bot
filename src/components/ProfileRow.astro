@@ -1,0 +1,38 @@
+---
+import { AVATAR_URL, FOLLOW_URL } from '../data/config';
+import { UI } from '../data/strings';
+
+interface Props {
+  initials: string;
+  name: string;
+  handle: string;
+  status: string;
+}
+
+const { initials, name, status } = Astro.props;
+---
+
+<section class="profile">
+  <div class="profile__avatar" aria-hidden="true">
+    {
+      AVATAR_URL ? (
+        <img
+          class="profile__photo"
+          src={AVATAR_URL}
+          alt=""
+          width="58"
+          height="58"
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        initials
+      )
+    }
+  </div>
+  <div class="profile__body">
+    <h1 class="profile__name">{name}</h1>
+    <p class="profile__meta">{status}</p>
+  </div>
+  <a class="profile__follow" href={FOLLOW_URL} target="_blank" rel="noopener">{UI.follow}</a>
+</section>

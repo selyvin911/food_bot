@@ -1,0 +1,64 @@
+---
+import type { Meal } from '../data/diary';
+import { mealKcal, mealMacroLine, mealSubline } from '../data/derive';
+import { UI } from '../data/strings';
+
+interface Props {
+  meal: Meal;
+  /** Meals ship collapsed. */
+  open?: boolean;
+}
+
+const { meal, open = false } = Astro.props;
+const kcal = mealKcal(meal);
+const subline = mealSubline(meal);
+const macroLine = mealMacroLine(meal);
+---
+
+<div class="block">
+  <details class="card card--clip meal" open={open}>
+    <summary class="meal__head">
+      <span class="meal__id">
+        <span class="meal__tag" style={`background:${meal.color}`} aria-hidden="true"></span>
+        <span>
+          <span class="meal__name">{meal.name}</span>
+          <span class="meal__sub meal__sub--open">{subline.open}</span>
+          <span class="meal__sub meal__sub--shut">{subline.closed}</span>
+          <span class="meal__macros">{macroLine}</span>
+        </span>
+      </span>
+      <span class="meal__totals">
+        <span class="meal__kcal">
+          <span class="meal__kcal-num">{kcal}</span>
+          <span class="meal__kcal-unit">{UI.meals.kcal}</span>
+        </span>
+        <span class="meal__chev" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="13"
+            height="13"
+            fill="none"
+            stroke="var(--ink-3)"
+            stroke-width="2.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg
+          >
+        </span>
+      </span>
+    </summary>
+
+    <ul class="meal__items">
+      {
+        meal.items.map((item) => (
+          <li class="meal__item">
+            <span style="flex:1;min-width:0">
+              <span class="meal__item-name">{item.name}</span>
+              <span class="meal__item-serving">{item.serving}</span>
+            </span>
+            <span class="meal__item-kcal">{item.kcal}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</div>

@@ -1,0 +1,53 @@
+---
+import type { Day } from '../data/diary';
+import { calorieRing, macroModels, metricRing } from '../data/derive';
+import ProgressRing from './ProgressRing.astro';
+
+interface Props {
+  day: Day;
+}
+
+const { day } = Astro.props;
+const macros = macroModels(day);
+
+// Кольцо калорий плюс кольца метрик из RING_METRICS.
+const rings = [
+  { ring: calorieRing(day), color: 'var(--brand)' },
+  ...day.metrics.map((metric, i) => ({
+    ring: metricRing(metric),
+    color: i === 0 ? 'var(--fat)' : 'var(--plants)',
+  })),
+];
+---
+
+<div class="block">
+  <section class="card card--pad">
+    <header>
+      <h3 class="summary__label">{day.label}</h3>
+      {day.note && <p class="summary__note">{day.note}</p>}
+    </header>
+
+    <div class="macros">
+      {
+        macros.map((macro) => (
+          <div class="macro">
+            <div class="macro__head">
+              <span class="macro__label">{macro.label}</span>
+              <span class="macro__pct">{macro.pctText}</span>
+            </div>
+            <div class="macro__track">
+              <div class="macro__fill" style={`width:${macro.width};background:${macro.color}`} />
+            </div>
+            <p class="macro__grams">{macro.grams}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <hr class="summary__rule" />
+
+    <div class="rings">
+      {rings.map(({ ring, color }) => <ProgressRing {...ring} color={color} />)}
+    </div>
+  </section>
+</div>
