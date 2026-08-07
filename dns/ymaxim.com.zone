@@ -1,0 +1,31 @@
+;; ---------------------------------------------------------------
+;; DNS-записи: ymaxim.com → GitHub Pages (selyvin911/food_bot)
+;;
+;; Импорт в Cloudflare:
+;;   DNS → Records → Import and Export → Import DNS records
+;;   выбрать этот файл → Proxy imported DNS records: НЕ включать
+;;
+;; ПЕРЕД импортом:
+;;   1. Workers & Pages → food-bot → Custom domains → удалить ymaxim.com
+;;   2. в DNS удалить существующие записи на @ (A/AAAA/CNAME от Pages)
+;;   Импорт только добавляет записи, старые он не удаляет.
+;;
+;; Проксирование (оранжевая тучка) должно быть выключено, иначе GitHub
+;; не пройдёт проверку домена и не выпустит TLS-сертификат.
+;; ---------------------------------------------------------------
+
+;; Апекс — четыре anycast-адреса GitHub Pages
+ymaxim.com.	300	IN	A	185.199.108.153
+ymaxim.com.	300	IN	A	185.199.109.153
+ymaxim.com.	300	IN	A	185.199.110.153
+ymaxim.com.	300	IN	A	185.199.111.153
+
+;; IPv6 — необязательно, но лишним не будет
+ymaxim.com.	300	IN	AAAA	2606:50c0:8000::153
+ymaxim.com.	300	IN	AAAA	2606:50c0:8001::153
+ymaxim.com.	300	IN	AAAA	2606:50c0:8002::153
+ymaxim.com.	300	IN	AAAA	2606:50c0:8003::153
+
+;; www → GitHub сам редиректит на апекс (он указан в файле CNAME сборки).
+;; Если поддомен не нужен — удалите эту строку.
+www.ymaxim.com.	300	IN	CNAME	selyvin911.github.io.
