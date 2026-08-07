@@ -74,6 +74,12 @@ export const FALLBACK_MEAL_COLOR = '#7C918B';
 /** Shows the sponsored slot from the original design. */
 export const SHOW_AD = true;
 
+/**
+ * Номер счётчика Яндекс.Метрики. 0 — аналитика не подключается.
+ * Грузится только в собранной версии, в `npm run dev` не срабатывает.
+ */
+export const METRIKA_ID = 111387776;
+
 /** Кнопка «Подписаться» ведёт сюда. */
 export const FOLLOW_URL = 'https://www.instagram.com/maxim.yurch/';
 

@@ -6,7 +6,7 @@ import ProfileRow from '../components/ProfileRow.astro';
 import SponsoredCard from '../components/SponsoredCard.astro';
 import WeekStrip from '../components/WeekStrip.astro';
 import Base from '../layouts/Base.astro';
-import { AD_URL, SHOW_AD } from '../data/config';
+import { AD_URL, METRIKA_ID, SHOW_AD } from '../data/config';
 import { UI } from '../data/strings';
 import { buildStamp } from '../lib/dates';
 import { loadDiaryWeek } from '../lib/map-board';
@@ -22,7 +22,7 @@ const generatedAt = buildStamp(new Date());
   description={UI.pageDescription(profile.name, range)}
 >
   <div class="shell">
-    <main class="frame">
+    <main class="frame" data-ym={METRIKA_ID || undefined}>
       <AppBar />
 
       {SHOW_AD && <SponsoredCard advertiser="VERDA" href={AD_URL} />}
@@ -45,6 +45,26 @@ const generatedAt = buildStamp(new Date());
   const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-day]'));
   const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-day-panel]'));
 
+  // Цели Яндекс.Метрики. Внешние ссылки счётчик отслеживает сам (trackLinks),
+  // а действия внутри страницы нужно отправлять руками.
+  const counterId = Number(document.querySelector<HTMLElement>('[data-ym]')?.dataset.ym);
+  function goal(name: string, params?: Record<string, unknown>) {
+    const ym = (window as unknown as { ym?: (...a: unknown[]) => void }).ym;
+    if (counterId && typeof ym === 'function') ym(counterId, 'reachGoal', name, params);
+  }
+
+  // Раскрытие приёма пищи. Событие toggle не всплывает — слушаем на перехвате.
+  document.addEventListener(
+    'toggle',
+    (event) => {
+      const details = event.target as HTMLDetailsElement;
+      if (details.matches?.('details.meal') && details.open) {
+        goal('meal_open', { meal: details.querySelector('.meal__name')?.textContent ?? '' });
+      }
+    },
+    true,
+  );
+
   function select(index: number, focus = false) {
     tabs.forEach((tab, i) => {
       const on = i === index;
@@ -64,7 +84,10 @@ const generatedAt = buildStamp(new Date());
 
   strip?.addEventListener('click', (event) => {
     const tab = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-day]');
-    if (tab) select(tabs.indexOf(tab));
+    if (tab) {
+      select(tabs.indexOf(tab));
+      goal('day_select');
+    }
   });
 
   strip?.addEventListener('keydown', (event) => {
