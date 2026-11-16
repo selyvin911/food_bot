@@ -47,10 +47,9 @@ npm run deploy    # build + публикация dist/ в ветку gh-pages (�
 | --- | --- |
 | [src/policies/](src/policies/) | Markdown-тексты документов (источник правды) |
 | [src/pages/](src/pages/) | Главная и страницы-обёртки документов |
-| [src/layouts/Base.astro](src/layouts/Base.astro) | `<head>`, шрифт, фавиконка, Метрика |
+| [src/layouts/Base.astro](src/layouts/Base.astro) | `<head>`, шрифт, фавиконка |
 | [src/layouts/Policy.astro](src/layouts/Policy.astro) | Общий макет страницы документа |
-| [src/components/Analytics.astro](src/components/Analytics.astro) | Яндекс.Метрика (только в проде) |
-| [src/data/config.ts](src/data/config.ts) | Имя разработчика, номер счётчика Метрики |
+| [src/data/config.ts](src/data/config.ts) | Имя разработчика |
 | [src/styles/global.css](src/styles/global.css) | Токены, макет, типографика документов |
 | [dns/ymaxim.com.zone](dns/ymaxim.com.zone) | DNS-записи домена |
 
