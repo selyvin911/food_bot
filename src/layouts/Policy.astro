@@ -1,0 +1,47 @@
+---
+import Base from './Base.astro';
+import { asset } from '../lib/url';
+import { DEVELOPER } from '../data/config';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: 'en' | 'ru';
+  /** App the document belongs to, shown above the heading. */
+  app: string;
+  /** Site-root-relative paths of this document's two language versions. */
+  en: string;
+  ru: string;
+}
+
+const { title, description, lang, app, en, ru } = Astro.props;
+const home = asset('');
+const year = new Date().getFullYear();
+---
+
+<Base {title} {description} {lang}>
+  <div class="page">
+    <header class="site-head">
+      <a class="site-head__home" href={home}>
+        <span class="site-head__mark" aria-hidden="true">M</span>
+        {DEVELOPER}
+      </a>
+      <nav class="lang" aria-label={lang === 'ru' ? 'Язык документа' : 'Document language'}>
+        {lang === 'en' ? <span aria-current="true">EN</span> : <a href={asset(en)}>EN</a>}
+        {lang === 'ru' ? <span aria-current="true">RU</span> : <a href={asset(ru)}>RU</a>}
+      </nav>
+    </header>
+
+    <main>
+      <p class="doc-head__app">{app}</p>
+      <article class="prose">
+        <slot />
+      </article>
+    </main>
+
+    <footer class="site-foot">
+      <span>© {year} {DEVELOPER}</span>
+      <a href={home}>{lang === 'ru' ? 'На главную' : 'Home'}</a>
+    </footer>
+  </div>
+</Base>

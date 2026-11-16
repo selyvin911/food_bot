@@ -1,105 +1,65 @@
 ---
-import AppBar from '../components/AppBar.astro';
-import DayPanel from '../components/DayPanel.astro';
-import DiaryFooter from '../components/DiaryFooter.astro';
-import ProfileRow from '../components/ProfileRow.astro';
-import SponsoredCard from '../components/SponsoredCard.astro';
-import WeekStrip from '../components/WeekStrip.astro';
 import Base from '../layouts/Base.astro';
-import { AD_URL, METRIKA_ID, SHOW_AD } from '../data/config';
-import { UI } from '../data/strings';
-import { buildStamp } from '../lib/dates';
-import { loadDiaryWeek } from '../lib/map-board';
+import { asset } from '../lib/url';
+import { DEVELOPER } from '../data/config';
 
-// Runs once, during the build. The request never happens in the browser.
-const { days, weeks, range, selectedIndex, profile } = await loadDiaryWeek();
-
-const generatedAt = buildStamp(new Date());
+const year = new Date().getFullYear();
 ---
 
 <Base
-  title={UI.pageTitle(profile.name)}
-  description={UI.pageDescription(profile.name, range)}
+  title={DEVELOPER}
+  description={`${DEVELOPER} — indie app developer. Privacy policies and terms of service for the apps.`}
 >
-  <div class="shell">
-    <main class="frame" data-ym={METRIKA_ID || undefined}>
-      <AppBar />
+  <div class="page">
+    <main>
+      <section class="hero">
+        <img class="hero__avatar" src={asset('avatar.webp')} alt="" width="96" height="96" />
+        <h1 class="hero__name">{DEVELOPER}</h1>
+        <p class="hero__role">Indie app developer</p>
+        <p class="hero__text">
+          I design and build small, focused mobile apps. This site hosts the
+          legal documents for my apps on the App&nbsp;Store and Google&nbsp;Play.
+        </p>
+      </section>
 
-      {SHOW_AD && <SponsoredCard advertiser="VERDA" href={AD_URL} />}
+      <section class="apps" aria-label="Apps">
+        <h2 class="apps__label">Apps</h2>
 
-      <ProfileRow {...profile} />
-
-      <WeekStrip weeks={weeks} selected={selectedIndex} />
-
-      {days.map((day) => <DayPanel day={day} index={day.index} active={day.index === selectedIndex} />)}
-
-      <DiaryFooter generatedAt={generatedAt} />
+        <article class="app-card">
+          <div class="app-card__head">
+            <div class="app-card__icon" aria-hidden="true">🍳</div>
+            <div>
+              <h3 class="app-card__name">Menushka</h3>
+              <p class="app-card__platform">iOS</p>
+            </div>
+          </div>
+          <p class="app-card__about">
+            Save recipes, plan a weekly menu and build a shopping list — with
+            recipe import from public TikTok videos and Telegram posts.
+          </p>
+          <ul class="app-card__links">
+            <li class="doc-link">
+              <a class="doc-link__title" href={asset('menushka/privacy.html')}>Privacy Policy</a>
+              <span class="doc-link__langs">
+                <a href={asset('menushka/privacy.html')}>EN</a>
+                <a href={asset('menushka/privacy-ru.html')}>RU</a>
+              </span>
+            </li>
+            <li class="doc-link">
+              <a class="doc-link__title" href={asset('menushka/terms.html')}>Terms of Service</a>
+              <span class="doc-link__langs">
+                <a href={asset('menushka/terms.html')}>EN</a>
+                <a href={asset('menushka/terms-ru.html')}>RU</a>
+              </span>
+            </li>
+          </ul>
+        </article>
+      </section>
     </main>
+
+    <footer class="site-foot">
+      <span>© {year} {DEVELOPER}</span>
+      <span>ymaxim.com</span>
+    </footer>
   </div>
 </Base>
-
-<script>
-  // Only interactive bit that needs JS: swapping which pre-rendered day panel
-  // is visible. Meal accordions are <details>, so they work without this.
-  const strip = document.querySelector<HTMLElement>('[data-week]');
-  const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-day]'));
-  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-day-panel]'));
-
-  // Цели Яндекс.Метрики. Внешние ссылки счётчик отслеживает сам (trackLinks),
-  // а действия внутри страницы нужно отправлять руками.
-  const counterId = Number(document.querySelector<HTMLElement>('[data-ym]')?.dataset.ym);
-  function goal(name: string, params?: Record<string, unknown>) {
-    const ym = (window as unknown as { ym?: (...a: unknown[]) => void }).ym;
-    if (counterId && typeof ym === 'function') ym(counterId, 'reachGoal', name, params);
-  }
-
-  // Раскрытие приёма пищи. Событие toggle не всплывает — слушаем на перехвате.
-  document.addEventListener(
-    'toggle',
-    (event) => {
-      const details = event.target as HTMLDetailsElement;
-      if (details.matches?.('details.meal') && details.open) {
-        goal('meal_open', { meal: details.querySelector('.meal__name')?.textContent ?? '' });
-      }
-    },
-    true,
-  );
-
-  function select(index: number, focus = false) {
-    tabs.forEach((tab, i) => {
-      const on = i === index;
-      tab.setAttribute('aria-selected', String(on));
-      tab.tabIndex = on ? 0 : -1;
-      if (on && focus) tab.focus();
-    });
-
-    panels.forEach((panel, i) => {
-      const on = i === index;
-      panel.hidden = !on;
-      // Re-trigger the fade by removing and re-adding the attribute.
-      panel.removeAttribute('data-active');
-      if (on) panel.setAttribute('data-active', '');
-    });
-  }
-
-  strip?.addEventListener('click', (event) => {
-    const tab = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-day]');
-    if (tab) {
-      select(tabs.indexOf(tab));
-      goal('day_select');
-    }
-  });
-
-  strip?.addEventListener('keydown', (event) => {
-    const current = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
-    const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
-    if (step === 0) {
-      if (event.key === 'Home') select(0, true);
-      else if (event.key === 'End') select(tabs.length - 1, true);
-      else return;
-    } else {
-      select((current + step + tabs.length) % tabs.length, true);
-    }
-    event.preventDefault();
-  });
-</script>

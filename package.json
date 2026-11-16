@@ -1,9 +1,9 @@
 {
-  "name": "dayplate",
+  "name": "ymaxim-site",
   "type": "module",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "DayPlate — a public food diary day view. Static, mobile-first Astro site.",
+  "description": "ymaxim.com — indie developer page and legal documents (privacy policy, terms of service) for the apps. Static Astro site.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
